@@ -1,0 +1,146 @@
+HOI4Lite/
+│
+├── project.godot
+├── main.tscn
+├── maps/
+│   └── europe_grid.tscn
+├── scripts/
+│   ├── GameManager.gd
+│   ├── Province.gd
+│   ├── Unit.gd
+│   ├── AI.gd
+│   └── Production.gd
+├── assets/
+│   ├── icons/
+│   │   ├── infantry.png
+│   │   ├── artillery.png
+│   │   └── tank.png
+│   └── tiles/
+│       └── province_tile.png
+└── .github/
+    └── workflows/
+        └── build-android.yml
+
+extends Node2D
+
+class_name Province
+
+# Province properties
+var owner = ""
+var civilian_factories = 0
+var military_factories = 0
+var garrison_units = []
+
+var position_on_map = Vector2()
+
+func _ready():
+    # Optional: draw square for province
+    pass
+
+extends Node2D
+
+class_name Province
+
+# Province properties
+var owner = ""
+var civilian_factories = 0
+var military_factories = 0
+var garrison_units = []
+
+var position_on_map = Vector2()
+
+func _ready():
+    # Optional: draw square for province
+    pass
+
+extends Node2D
+
+class_name Unit
+
+# Unit properties
+var unit_type = "" # "Infantry", "Artillery", "Tank"
+var division_template = {}
+var owner_country = ""
+var province = null
+var icon = null
+
+func _ready():
+    if unit_type == "Infantry":
+        icon = preload("res://assets/icons/infantry.png")
+    elif unit_type == "Artillery":
+        icon = preload("res://assets/icons/artillery.png")
+    elif unit_type == "Tank":
+        icon = preload("res://assets/icons/tank.png")
+    
+    var sprite = Sprite2D.new()
+    sprite.texture = icon
+    add_child(sprite)
+
+extends Node
+
+var provinces = []
+var units = []
+
+func _ready():
+    # Initialize map, units, etc.
+    pass
+
+func _process(delta):
+    # Tick-based update for AI, battles, production
+    pass
+
+extends Node
+
+func make_ai_turn():
+    # For each AI division
+    # 1. Check nearby enemy provinces
+    # 2. Move or attack
+    # 3. Build factories if idle
+    pass
+
+extends Node
+
+func produce_resources(province):
+    # Civilian factories can build factories
+    # Military factories produce guns, artillery, tanks
+    pass
+
+func _input(event):
+    if event is InputEventScreenTouch:
+        # Handle tap
+        pass
+    elif event is InputEventScreenDrag:
+        # Handle swipe/pan
+        pass
+    elif event is InputEventMagnifyGesture:
+        # Handle pinch/zoom
+        pass
+
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Godot
+      uses: firebelley/godot-ci@v2
+      with:
+        godot-version: "4.2"
+        mono: false
+
+    - name: Export Android APK
+      run: |
+        godot --export "Android" "HOI4Lite.apk"
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: HOI4Lite-APK
+        path: HOI4Lite.apk
